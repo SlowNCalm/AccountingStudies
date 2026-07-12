@@ -48,10 +48,6 @@ const app = document.getElementById('app');
 function renderMap(){
   const earned = state.xp;
   const max = totalXP();
-  let unlockedIdx = 0;
-  for(let i=0;i<LEVELS.length;i++){
-    if(state.completed[LEVELS[i].id]) unlockedIdx = i+1;
-  }
 
   let html = `
   <div class="topbar">
@@ -70,20 +66,17 @@ function renderMap(){
   <div class="map-intro">
     <span class="kicker">Assess → Identify → Analyze → Conclude</span>
     <h2>Ten stops between here and the exam room.</h2>
-    <p>Every stop is a real case, walked through the AFM 291 problem-solving process — asset criteria, the IFRS 15 five-step model, long-term contracts, provisions, subsequent events, and accounting changes. Journal entries you build get stamped straight onto the balance sheet and income statement so you can <i>see</i> the impact, not just calculate it. Work the trail in order, or jump straight to whatever you need to drill.</p>
+    <p>Every stop is a real case, walked through the AFM 291 problem-solving process — asset criteria, the IFRS 15 five-step model, long-term contracts, provisions, subsequent events, and accounting changes. Journal entries you build get stamped straight onto the balance sheet and income statement so you can <i>see</i> the impact, not just calculate it. Every stop is open — jump straight to whatever you need to drill.</p>
   </div>
   <div class="trail">`;
 
   LEVELS.forEach((lvl, i)=>{
     const done = !!state.completed[lvl.id];
-    const locked = i > unlockedIdx;
-    const cls = done? "done" : (locked? "locked" : "clickable");
+    const cls = done? "done" : "clickable";
     let status = done ? `<span class="node-status done">✓ Complete</span>`
-      : locked ? `<span class="node-status locked">🔒 Locked</span>`
       : `<span class="node-status go">Start →</span>`;
     html += `<div class="node-row">
-      <div class="node ${cls} ${lvl.boss?'node--boss':''}" ${(!locked)?`onclick="openLevel('${lvl.id}')"`:''}>
-        <div class="node-badge ${lvl.boss?'boss':''}">${lvl.icon}</div>
+      <div class="node ${cls} ${lvl.boss?'node--boss':''}" onclick="openLevel('${lvl.id}')">        <div class="node-badge ${lvl.boss?'boss':''}">${lvl.icon}</div>
         <div class="node-body">
           <span class="node-eyebrow">${lvl.eyebrow} · +${lvl.xp} XP</span>
           <div class="node-title">${lvl.title}</div>
